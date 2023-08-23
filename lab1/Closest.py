@@ -9,7 +9,7 @@ Usage:
 
 [Nicolas Van der Werf]
 
-[August 23 2023]
+[August, 23, 2023]
 """
 
 import random
