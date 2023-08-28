@@ -5,7 +5,6 @@ Created on Jul 17, 2016
 Modified on Aug 21, 2022
 @auther: Jingsai
 '''
-import pytest
 import Fibonacci
 
 def testFib1():

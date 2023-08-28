@@ -9,7 +9,7 @@ This Tests the Closest Pair Program.
 
 import unittest
 import Closest
-import sys
+
 
 class MyTestCase(unittest.TestCase):
     def testClosest1(self):
