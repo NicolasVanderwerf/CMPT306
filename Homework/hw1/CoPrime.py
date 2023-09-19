@@ -29,27 +29,38 @@ def coprimes(m, n):
     '''
     output the contents of result
     '''
-    row = 0
-    col = 0
-    for x in result:
-        # x[:] is a list "slice"
-        for y in x[:]:
-            # print("ROW: " +str(row) + " COL: " + str(col) + "   IS COPRIME:  " + str(isCoPrime(row,col)))
-            if isCoPrime(row,col):
-                print('   ', end="")
+    # row = 0
+    # col = 0
+    # for x in result:
+    #     # x[:] is a list "slice"
+    #     for y in x[:]:
+    #         # print("ROW: " +str(row) + " COL: " + str(col) + "   IS COPRIME:  " + str(isCoPrime(row,col)))
+    #         if isCoPrime(row, col):
+    #             print('* ', end="")
+    #         else:
+    #             print('  ', end="")
+    #         row += 1
+    #     row = 0
+    #     col += 1
+    #     print()
+    # print("----flipped----")
+    for i in range(len(result[0]) - 1,0,-1):
+        for j in range(len(result)):
+            if isCoPrime(i, j):
+                print('* ', end="")
             else:
-                print(y + '  ', end="")
-            row += 1
-        row = 0
-        col += 1
-
-
+                print('  ', end="")
         print()
+
+
+
 
     '''
         YOUR WORK WILL GO HERE
     '''
 def isCoPrime(x,y):
+    if x == 0 or y == 0:
+        return False
     small = 0
     large = 0
     if x < y:
@@ -71,5 +82,5 @@ if __name__ == "__main__":
         print('Usage\n python CoPrime [int] [int]')
         quit()
 
-    #coprimes(int(sys.argv[1]), int(sys.argv[2]))
+    coprimes(int(sys.argv[1]), int(sys.argv[2]))
 
