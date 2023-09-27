@@ -3,6 +3,9 @@
 Demonstration of some simple graph algorithms.
     
 @author: Jingsai Liang
+
+Nicolas Van der Werf and Prashun Aryal.
+Completed separately outside of class.
 '''
 
 import sys
@@ -101,10 +104,9 @@ class GraphAlgorithms:
             
 
     def DFS_recur(self,vertex):
-        adjacentV = self.adjacencyList[vertex]
-        self.path = self.path + vertex
+        self.path += vertex
         self.visited[vertex] = True
-        for v in adjacentV:
+        for v in self.adjacencyList[vertex]:
             if not self.visited[v]:
                 self.DFS_recur(v)
                 
@@ -115,7 +117,7 @@ class GraphAlgorithms:
         while len(stack) > 0:
             v = stack.pop(0)
             if not self.visited[v]:
-                self.path = self.path + v
+                self.path += v
                 self.visited[v] = True
                 for a in self.adjacencyList[v]:
                     if not self.visited[a]:
@@ -180,15 +182,15 @@ class GraphAlgorithms:
         queue = []
         queue.append(p)
         queue.append('level')
-        i = 0
+        l = 0
         while len(queue) > 0:
             v = queue.pop(0)
             if v == 'level':
-                i += 1
+                l += 1
                 if len(queue) > 0:
                     queue.append('level')
             elif v == q:
-                return i
+                return l
             else:
                 if not self.visited[v]:
                     self.visited[v] = True
