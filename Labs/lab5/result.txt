@@ -1,5 +1,20 @@
-Question 1: What is this Mexican person's full name?
+Question 1 BruteForce: What is this Mexican person's full name?
+Andres Manuel LOPEZ CASTILLO
 
-Question 2: What is this Arabic person's full name?
+Question 2 BruteForce: What is this Chinese person's full name?
+HUANG Tianyi
 
-Question 3: What is this Chinese person's full name in eastern order? 
+Question 3 BruteForce: What is this Arabic person's full name?
+Harun ABDULLA MUHAMMAD
+
+
+
+Question 1 Horspool: What is this Mexican person's full name?
+Andres Manuel LOPEZ CASTILLO
+
+Question 2 Horspool: What is this Chinese person's full name?
+HUANG Tianyi
+
+Question 3 Horspool: What is this Arabic person's full name?
+Harun ABDULLA MUHAMMAD
+

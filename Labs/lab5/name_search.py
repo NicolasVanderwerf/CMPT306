@@ -1,9 +1,11 @@
-import numpy as np 
+import sys
+import timeit
+import numpy as np
 import argparse
 
-from tqdm import tqdm
-
-
+#Nicolas Van der Werf, Taeden Anderson
+#Did work with each other after class and did not have much of the same code in class.
+#No Diagonal Function Used
 class NameSearch:
 
     def __init__(self, Name_List, Name_Algorithm, Name_Length):
@@ -22,43 +24,22 @@ class NameSearch:
     def match_BruteForce(self, pattern, text):
         # String matching by brute force
         # Your code goes here:
-        pass
-
-    def match_BruteForce2(self):
-        Rows, Columns = self.matrix.shape
-        pbar = tqdm(self.names, bar_format='{rate_fmt}')
-        for name in pbar:
+        match = False
+        for name in pattern:
             if len(name) == self.Name_Length:
-                for x in range(0,self.Rows):
-                    for y in range(0,self.Columns):
-                        if self.matrix[x, y] == name[0]:
-                            valid = self.BruteForceSearch(name,x,y)
-                            if valid[0] == True:
-                                return valid[1]
-    def BruteForceSearch(self,name,x,y):
-        valid = False, ''
-        lName = len(name) - 1
-
-        directions = [
-            ('Down', (1, 0)),
-            ('Right', (0, 1)),
-            ('DownRight', (1, 1)),
-            ('DownLeft', (1, -1))
-        ]
-
-        for direction,(dirx,diry) in directions:
-            endx = x+(lName*dirx)
-            endy = y+(lName*diry)
-            if self.validXY(endx,endy) and self.matrix[endx, endy] == name[lName]:
-             for i in range(1,len(name)):
-                 posx = x + (i * dirx)
-                 posy = y + (i * diry)
-                 if self.validXY(posx,posy) and self.matrix[posx, posy] != name[i]:
-                     valid = False, ''
-                     break
-                 else:
-                     valid = True, name+' True '+direction+': ' + str(x + 1) + ' ' + str(y + 1)
-        return valid
+                for i in range(0,len(text)):
+                    match = True
+                    if name[0] == text[i]:
+                        for x in range(0,len(name)):
+                            if i + x > len(text) or name[x] != text[i+x]:
+                                match = False
+                                break
+                        if match:
+                            returnName = name
+                            break
+        if match:
+            return returnName
+        return 'No Name Found'
 
     def validXY(self,x,y):
         if x < 0 or x >= self.Rows:
@@ -69,21 +50,103 @@ class NameSearch:
 
     def match_Horspool(self, pattern, text):
         # String matching by Horspool's algorithm
-        # Your code goes here:
-        pass
+        #pattern is list of names
+        #text is text to search
+        returnName = ''
+        for name in pattern:
+            nameLength = len(name)
+            # print(name)
+            # print(self.Name_Length)
+            # print(nameLength == self.Name_Length)
+
+            if nameLength == self.Name_Length:
+                # print(name)
+                horMap = {chr(i): nameLength for i in range(65, 91)}
+                horMap[' '] = nameLength
+                # print(horMap)
+
+                for i in range(2,nameLength):
+                    c = name[i*-1]
+                    # print(c)
+                    if horMap[c] == nameLength:
+                        horMap[c] = i - 1
+                # print(name)
+                # print(horMap)
+                # return
+                i = nameLength - 1
+                while i < len(text):
+                    # print(i)
+                    # namePos = nameLength - 1
+                    namePos = 0
+                    while namePos <= nameLength-1 and name[nameLength - 1 - namePos] == text[i - namePos]:
+                        # print(namePos)
+                        namePos += 1
+                    if namePos == nameLength:
+                        # print(horMap)
+                        return name
+                    # print(text[textPos])
+                    # print(horMap[text[i]], file=sys.stderr)
+                    i += horMap[text[i]]
+
+        return 'No Name Found'
         
     def search(self):
         # pattern is each name in self.names
-        # text is each horizontal, vertical, and diagonal strings in self.matrix 
+        # text is each horizontal, vertical, and diagonal strings in self.matrix
+        text = self.genText()
+        # print(text)
         if self.Name_Algorithm == "BruteForce":
-            # call self.match_BruteForce(pattern, text)
-            nameLocation = self.match_BruteForce2()
-            print(nameLocation)
-            #print(self.matrix)
-            pass
+            print('-----BRUTEFORCE----', file=sys.stderr)
+            result = self.match_BruteForce(self.names, text)
+            print(result, end='\r')
+            print(result, file=sys.stderr)
         elif self.Name_Algorithm == "Horspool":
-            # call self.match_Horspool(pattern, text)
-            pass
+            print('-----Horspool----', file=sys.stderr)
+            result = self.match_Horspool(self.names, text)
+            print(result, end='\r')
+            print(result, file=sys.stderr)
+
+    def genText(self):
+        returnText = ''
+        downCords = [(0, y)for y in range(self.Columns)]
+        rightCords = [(x, 0)for x in range(self.Rows)]
+        downRightCords = [(x, 0) for x in range(self.Rows)] + [(0,y) for y in range(1,self.Columns)]
+        downLeftCords = [(x, self.Columns-1) for x in range(1,self.Rows)] + [(0,y) for y in range(self.Columns)]
+        directions = {
+            'Down': [1, 0,downCords],
+            'Right': [0, 1,rightCords],
+            'DownRight': [1, 1,downRightCords],
+            'DownLeft': [1, -1,downLeftCords]
+        }
+        for direction in directions:
+            returnText += self.getDirection(directions[direction])
+        return returnText
+
+
+
+    def getDirection(self,direction):
+        text = ' '
+        startPoints = direction[2]
+        for (x,y) in startPoints:
+            for i in range(0,self.Rows+self.Columns):
+                posx = x + (i * direction[0])
+                posy = y + (i * direction[1])
+                if not self.validXY(posx, posy):
+                    break
+                else:
+                    text += self.matrix[posx][posy]
+            text += ' '
+        return text
+
+    def timeTest(self):
+        text = self.genText()
+        if self.Name_Algorithm == "BruteForce":
+            bf_time = timeit.timeit(lambda: obj.match_BruteForce(self.names, text), number=1)
+            print(f"Time: {bf_time:.6f} seconds\n",file=sys.stderr)
+        else:
+            hp_time = timeit.timeit(lambda: obj.match_Horspool(self.names, text), number=1)
+            print(f"Time:   {hp_time:.6f} seconds\n",file=sys.stderr)
+
 
 if __name__ == "__main__":
         
@@ -98,5 +161,6 @@ if __name__ == "__main__":
 
     obj = NameSearch(args.Name_List, args.Name_Algorithm, args.Name_Length)
     obj.search()
+    obj.timeTest()
 
 
